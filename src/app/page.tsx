@@ -14,7 +14,7 @@ const operands = ['+', '-', '*', '/', '%', '(', ')', '^'];
 export default function Home() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const {tags, addTag, removeTag} = useFormulaStore();
+  const {tags, tagList, addTag, addToTagList, removeTag, removeFromTagList} = useFormulaStore();
   const queryClient = useQueryClient();
 
   const debouncedSetSearchTerm = useMemo(
@@ -69,6 +69,14 @@ export default function Home() {
     }
   }, [removeTag, tags, searchTerm.length]);
 
+  const handleRemoveTagList = useCallback((tagListId: string) => {
+      removeFromTagList(tagListId);
+  }, [removeFromTagList]);
+
+  const handleAddToTagList = useCallback(() => {
+    addToTagList()
+  }, [addToTagList]);
+
   const handleTagSelect = useCallback((tag: TagProps) => {
     
     addTag(tag);
@@ -79,6 +87,8 @@ export default function Home() {
     <PageView
       {
         ...{
+          handleRemoveTagList,
+          handleAddToTagList,
           handleInputChange,
           handleTagSelect,
           handleKeyDown,
@@ -86,6 +96,7 @@ export default function Home() {
           searchTerm,
           isLoading,
           operands,
+          tagList,
           tags,
         }
       }
